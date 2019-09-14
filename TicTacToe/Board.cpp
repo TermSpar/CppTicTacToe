@@ -12,6 +12,43 @@ Board::Board(sf::Vector2f size, sf::Color color) {
 	turn = "o";
 }
 
+std::string Board::getWinnerOrTie() {
+	return winnerOrTie;
+}
+
+int Board::getXscore() {
+	return scoreX;
+}
+
+int Board::getOscore() {
+	return scoreO;
+}
+
+void Board::resetGame() {
+	// clear vectors:
+	xNum = 0;
+	xVec.clear();
+
+	oNum = 0;
+	oVec.clear();
+
+	// clear array:
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			XOarray[i][j] = NULL;
+		}
+	}
+
+	// reset spaces to open:
+	topLeft = true; topMiddle = true; topRight = true;
+	middleLeft = true; middleMiddle = true; middleRight = true;
+	bottomLeft = true; bottomMiddle = true; bottomRight = true;
+
+	isWinner = false;
+	winnerOrTie = "none";
+	moves = 0;
+}
+
 void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 	// get mouse coords:
 	sf::Vector2i mouseCoords({ sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y });
@@ -259,36 +296,52 @@ void Board::drawXorO(sf::Vector2f pos) {
 }
 
 void Board::checkForWins() {
-	// if it's a tie:
-	if (moves == 9 && !isWinner) {
-		std::cout << "It's a tie\n";
-		resetGame();
-		return;
-	}
-
 	// loop through XOarray:
 	for (int vert = 0; vert < 3; vert++) {
 		for (int horiz = 0; horiz < 3; horiz++) {
 			// check for horizontal wins:
-			if (XOarray[vert][horiz + 1] != NULL && XOarray[vert][horiz - 1] != NULL) {
+			if (XOarray[vert][horiz + 1] != NULL && XOarray[vert][horiz - 1] != NULL && (horiz - 1) != -1 && (horiz + 1) < 3) {
 				if (XOarray[vert][horiz] == XOarray[vert][horiz + 1] && XOarray[vert][horiz] == XOarray[vert][horiz - 1]) {
+					if (!isWinner) {
+						if (XOarray[vert][horiz] == 'x') {
+							winnerOrTie = "X";
+							scoreX++;
+						}
+						else {
+							winnerOrTie = "O";
+							scoreO++;
+						}
+					}
 					isWinner = true;
-					if(XOarray[vert][horiz] == 'x')
-						std::cout << "x is the WINNER\n";
-					else
-						std::cout << "o is the WINNER\n";
-					resetGame();
 				}
 			}
 			// check for vertical wins:
 			else if (XOarray[vert + 1][horiz] != NULL && XOarray[vert - 1][horiz] != NULL) {
 				if (XOarray[vert][horiz] == XOarray[vert + 1][horiz] && XOarray[vert][horiz] == XOarray[vert - 1][horiz]) {
+					if (!isWinner) {
+						if (XOarray[vert][horiz] == 'x') {
+							winnerOrTie = "X";
+							scoreX++;
+						}
+						else {
+							winnerOrTie = "O";
+							scoreO++;
+						}
+					}
 					isWinner = true;
-					if (XOarray[vert][horiz] == 'x')
-						std::cout << "x is the WINNER\n";
-					else
-						std::cout << "o is the WINNER\n";
-					resetGame();
+				}
+			}
+
+			// weird bug fix:
+			if (XOarray[0][1] != NULL) {
+				if (XOarray[0][1] == XOarray[1][1] && XOarray[0][1] == XOarray[2][1]) {
+					if (XOarray[0][1] == 'x') {
+						if (!isWinner) {
+							winnerOrTie = "X";
+							scoreX++;
+						}
+						isWinner = true;
+					}
 				}
 			}
 		}
@@ -298,37 +351,25 @@ void Board::checkForWins() {
 		XOarray[0][2] != NULL && XOarray[1][1] != NULL) {
 		if ((XOarray[0][0] == XOarray[1][1] && XOarray[0][0] == XOarray[2][2]) ||
 			(XOarray[0][2] == XOarray[1][1] && XOarray[0][2] == XOarray[2][0])) {
-			isWinner = true;
-			if (XOarray[0][0] == 'x')
-				std::cout << "x is the WINNER\n";
-			else
-				std::cout << "o is the WINNER\n";
-			resetGame();
-		}
-	}
-}
-
-void Board::resetGame() {
-	// clear vectors:
-	xNum = 0;
-	xVec.clear();
-
-	oNum = 0;
-	oVec.clear();
-
-	// clear array:
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			XOarray[i][j] = NULL;
+			if (!isWinner) {
+				if (XOarray[0][0] == 'x') {
+					winnerOrTie = "X";
+					scoreX++;
+				}
+				else {
+					winnerOrTie = "O";
+					scoreO++;
+				}
+				isWinner = true;
+			}
 		}
 	}
 
-	// reset spaces to open:
-	topLeft = true; topMiddle = true; topRight = true;
-	middleLeft = true; middleMiddle = true; middleRight = true;
-	bottomLeft = true; bottomMiddle = true; bottomRight = true;
-
-	isWinner = false;
+	// if it's a tie:
+	if (moves == 9 && !isWinner) {
+		winnerOrTie = "TIE";
+		return;
+	}
 }
 
 Board::~Board() {

@@ -16,6 +16,17 @@ public:
 	// click on certain peices of board:
 	void checkClicking(std::string, sf::RenderWindow &w);
 
+	// return who won the game or tie:
+	std::string getWinnerOrTie();
+
+	// get scores:
+	int getXscore();
+
+	int getOscore();
+
+	// reset the game:
+	void resetGame();
+
 	// set board position on window:
 	void setPosition(sf::Vector2f);
 
@@ -55,9 +66,13 @@ private:
 	// check for wins:
 	char XOarray[3][3];
 	void checkForWins();
+	std::string winnerOrTie = "none";
 
-	// reset game:
-	void resetGame();
+	// score vars:
+	int scoreX = 0;
+	int scoreO = 0;
+
+	// reset game vars:
 	int moves = 0;
 	bool isWinner = false;
 };
