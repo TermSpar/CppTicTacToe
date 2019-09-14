@@ -29,9 +29,15 @@ void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 			mouseY > board.getPosition().y && mouseY < topHorizLine.getPosition().y) {
 			// if spot is still open:
 			if (topLeft) {
+				// account for x or o:
+				if (turn == "x")
+					XOarray[0][0] = 'x';
+				else
+					XOarray[0][0] = 'o';
 				// draw x or o in that box:
 				drawXorO({ board.getPosition().x + 10, board.getPosition().y + 10 });
 				// mark spot as taken:
+				moves++;
 				topLeft = false;
 			}
 		}
@@ -40,9 +46,15 @@ void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 			mouseY > board.getPosition().y && mouseY < topHorizLine.getPosition().y) {
 			// if spot is still open:
 			if (topMiddle) {
+				// account for x or o:
+				if (turn == "x")
+					XOarray[0][1] = 'x';
+				else
+					XOarray[0][1] = 'o';
 				// draw x or o in that box:
 				drawXorO({ board.getPosition().x + 300, board.getPosition().y + 10 });
 				// mark spot as taken:
+				moves++;
 				topMiddle = false;
 			}
 		}
@@ -51,9 +63,15 @@ void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 			mouseY > board.getPosition().y && mouseY < topHorizLine.getPosition().y) {
 			// if spot is still open:
 			if (topRight) {
+				// account for x or o:
+				if (turn == "x")
+					XOarray[0][2] = 'x';
+				else
+					XOarray[0][2] = 'o';
 				// draw x or o in that box:
 				drawXorO({ board.getPosition().x + 570, board.getPosition().y + 10 });
 				// mark spot as taken:
+				moves++;
 				topRight = false;
 			}
 		}
@@ -63,9 +81,15 @@ void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 			mouseY > topHorizLine.getPosition().y + lineWidth && mouseY < bottomHorizLine.getPosition().y) {
 			// if spot is still open:
 			if (middleLeft) {
+				// account for x or o:
+				if (turn == "x")
+					XOarray[1][0] = 'x';
+				else
+					XOarray[1][0] = 'o';
 				// draw x or o in that box:
 				drawXorO({ board.getPosition().x + 10, board.getPosition().y + 300 });
 				// mark spot as taken:
+				moves++;
 				middleLeft = false;
 			}
 		}
@@ -74,9 +98,15 @@ void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 			mouseY > topHorizLine.getPosition().y + lineWidth && mouseY < bottomHorizLine.getPosition().y) {
 			// if spot is still open:
 			if (middleMiddle) {
+				// account for x or o:
+				if (turn == "x")
+					XOarray[1][1] = 'x';
+				else
+					XOarray[1][1] = 'o';
 				// draw x or o in that box:
 				drawXorO({ board.getPosition().x + 300, board.getPosition().y + 300 });
 				// mark spot as taken:
+				moves++;
 				middleMiddle = false;
 			}
 		}
@@ -85,9 +115,15 @@ void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 			mouseY > topHorizLine.getPosition().y + lineWidth && mouseY < bottomHorizLine.getPosition().y) {
 			// if spot is still open:
 			if (middleRight) {
+				// account for x or o:
+				if (turn == "x")
+					XOarray[1][2] = 'x';
+				else
+					XOarray[1][2] = 'o';
 				// draw x or o in that box:
 				drawXorO({ board.getPosition().x + 570, board.getPosition().y + 300 });
 				// mark spot as taken:
+				moves++;
 				middleRight = false;
 			}
 		}
@@ -97,9 +133,15 @@ void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 			mouseY > bottomHorizLine.getPosition().y + lineWidth && mouseY < board.getPosition().y + board.getSize().y) {
 			// if spot is still open:
 			if (bottomLeft) {
+				// account for x or o:
+				if (turn == "x")
+					XOarray[2][0] = 'x';
+				else
+					XOarray[2][0] = 'o';
 				// draw x or o in that box:
 				drawXorO({ board.getPosition().x + 10, board.getPosition().y + 580 });
 				// mark spot as taken:
+				moves++;
 				bottomLeft = false;
 			}
 		}
@@ -108,9 +150,15 @@ void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 			mouseY > bottomHorizLine.getPosition().y + lineWidth && mouseY < board.getPosition().y + board.getSize().y) {
 			// if spot is still open:
 			if (bottomMiddle) {
+				// account for x or o:
+				if (turn == "x")
+					XOarray[2][1] = 'x';
+				else
+					XOarray[2][1] = 'o';
 				// draw x or o in that box:
 				drawXorO({ board.getPosition().x + 300, board.getPosition().y + 580 });
 				// mark spot as taken:
+				moves++;
 				bottomMiddle = false;
 			}
 		}
@@ -119,13 +167,21 @@ void Board::checkClicking(std::string e, sf::RenderWindow &window) {
 			mouseY > bottomHorizLine.getPosition().y + lineWidth && mouseY < board.getPosition().y + board.getSize().y) {
 			// if spot is still open:
 			if (bottomRight) {
+				// account for x or o:
+				if (turn == "x")
+					XOarray[2][2] = 'x';
+				else
+					XOarray[2][2] = 'o';
 				// draw x or o in that box:
 				drawXorO({ board.getPosition().x + 570, board.getPosition().y + 580 });
 				// mark spot as taken:
+				moves++;
 				bottomRight = false;
 			}
 		}
 	}
+	// check for wins:
+	checkForWins();
 }
 
 void Board::setPosition(sf::Vector2f pos) {
@@ -200,6 +256,79 @@ void Board::drawXorO(sf::Vector2f pos) {
 		turn = "x";
 		return;
 	}
+}
+
+void Board::checkForWins() {
+	// if it's a tie:
+	if (moves == 9 && !isWinner) {
+		std::cout << "It's a tie\n";
+		resetGame();
+		return;
+	}
+
+	// loop through XOarray:
+	for (int vert = 0; vert < 3; vert++) {
+		for (int horiz = 0; horiz < 3; horiz++) {
+			// check for horizontal wins:
+			if (XOarray[vert][horiz + 1] != NULL && XOarray[vert][horiz - 1] != NULL) {
+				if (XOarray[vert][horiz] == XOarray[vert][horiz + 1] && XOarray[vert][horiz] == XOarray[vert][horiz - 1]) {
+					isWinner = true;
+					if(XOarray[vert][horiz] == 'x')
+						std::cout << "x is the WINNER\n";
+					else
+						std::cout << "o is the WINNER\n";
+					resetGame();
+				}
+			}
+			// check for vertical wins:
+			else if (XOarray[vert + 1][horiz] != NULL && XOarray[vert - 1][horiz] != NULL) {
+				if (XOarray[vert][horiz] == XOarray[vert + 1][horiz] && XOarray[vert][horiz] == XOarray[vert - 1][horiz]) {
+					isWinner = true;
+					if (XOarray[vert][horiz] == 'x')
+						std::cout << "x is the WINNER\n";
+					else
+						std::cout << "o is the WINNER\n";
+					resetGame();
+				}
+			}
+		}
+	}
+	// check diagonal wins:
+	if ((XOarray[0][0] != NULL && XOarray[1][1] != NULL && XOarray[2][2] != NULL) ||
+		XOarray[0][2] != NULL && XOarray[1][1] != NULL) {
+		if ((XOarray[0][0] == XOarray[1][1] && XOarray[0][0] == XOarray[2][2]) ||
+			(XOarray[0][2] == XOarray[1][1] && XOarray[0][2] == XOarray[2][0])) {
+			isWinner = true;
+			if (XOarray[0][0] == 'x')
+				std::cout << "x is the WINNER\n";
+			else
+				std::cout << "o is the WINNER\n";
+			resetGame();
+		}
+	}
+}
+
+void Board::resetGame() {
+	// clear vectors:
+	xNum = 0;
+	xVec.clear();
+
+	oNum = 0;
+	oVec.clear();
+
+	// clear array:
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			XOarray[i][j] = NULL;
+		}
+	}
+
+	// reset spaces to open:
+	topLeft = true; topMiddle = true; topRight = true;
+	middleLeft = true; middleMiddle = true; middleRight = true;
+	bottomLeft = true; bottomMiddle = true; bottomRight = true;
+
+	isWinner = false;
 }
 
 Board::~Board() {

@@ -51,5 +51,14 @@ private:
 
 	// draw x's and o's
 	void drawXorO(sf::Vector2f pos);
+
+	// check for wins:
+	char XOarray[3][3];
+	void checkForWins();
+
+	// reset game:
+	void resetGame();
+	int moves = 0;
+	bool isWinner = false;
 };
 
