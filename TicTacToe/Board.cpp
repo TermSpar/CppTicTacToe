@@ -352,7 +352,7 @@ void Board::checkForWins() {
 		if ((XOarray[0][0] == XOarray[1][1] && XOarray[0][0] == XOarray[2][2]) ||
 			(XOarray[0][2] == XOarray[1][1] && XOarray[0][2] == XOarray[2][0])) {
 			if (!isWinner) {
-				if (XOarray[0][0] == 'x') {
+				if (XOarray[1][1] == 'x') {
 					winnerOrTie = "X";
 					scoreX++;
 				}
